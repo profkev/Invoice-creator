@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modern Invoice Generator</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+    }
+    h1, h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    form {
+      margin-bottom: 30px;
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background: #f4f4f4;
+    }
+    .total {
+      text-align: right;
+      font-weight: bold;
+    }
+    .btn {
+      background: #007BFF;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background: #0056b3;
+    }
+    .company-info {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Modern Invoice Generator</h1>
+    <div class="company-info">
+      <p><strong>KEVEXPLORE</strong></p>
+      <p>Nairobi, Kenya</p>
+      <p>Phone: 0708328905</p>
+    </div>
+    <form id="invoiceForm">
+      <label for="clientName">Client Name:</label>
+      <input type="text" id="clientName" required>
+
+      <label for="projectName">Project Name:</label>
+      <input type="text" id="projectName" placeholder="e.g., Website Development" required>
+
+      <h2>Pricing Breakdown</h2>
+      <label for="taskDescription">Task/Service Description:</label>
+      <input type="text" id="taskDescription" placeholder="e.g., Frontend Development" required>
+
+      <label for="taskCost">Cost (KES):</label>
+      <input type="number" id="taskCost" min="1" step="0.01" required>
+
+      <button type="button" class="btn" onclick="addTask()">Add Task</button>
+    </form>
+
+    <h2>Invoice</h2>
+    <table id="invoiceTable">
+      <thead>
+        <tr>
+          <th>Task/Service</th>
+          <th>Cost (KES)</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+      <tfoot>
+        <tr>
+          <td class="total">Grand Total:</td>
+          <td class="total" id="grandTotal">0.00</td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <button class="btn" onclick="downloadInvoice()">Download Styled Invoice</button>
+  </div>
+
+  <script>
+    let tasks = [];
+
+    function addTask() {
+      const taskDescription = document.getElementById('taskDescription').value;
+      const taskCost = parseFloat(document.getElementById('taskCost').value);
+
+      if (!taskDescription || taskCost <= 0) {
+        alert('Please fill out both task description and cost correctly.');
+        return;
+      }
+
+      tasks.push({ description: taskDescription, cost: taskCost });
+
+      renderInvoice();
+      clearForm();
+    }
+
+    function renderInvoice() {
+      const tbody = document.querySelector('#invoiceTable tbody');
+      tbody.innerHTML = '';
+      let grandTotal = 0;
+
+      tasks.forEach((task) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${task.description}</td>
+          <td>${task.cost.toFixed(2)}</td>
+        `;
+        tbody.appendChild(row);
+        grandTotal += task.cost;
+      });
+
+      document.getElementById('grandTotal').textContent = grandTotal.toFixed(2);
+    }
+
+    function clearForm() {
+      document.getElementById('taskDescription').value = '';
+      document.getElementById('taskCost').value = '';
+    }
+
+    async function downloadInvoice() {
+      const clientName = document.getElementById('clientName').value;
+      const projectName = document.getElementById('projectName').value;
+
+      if (!clientName || !projectName || tasks.length === 0) {
+        alert('Please fill out the client name, project name, and add at least one task.');
+        return;
+      }
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      // Add watermark
+      doc.setFontSize(50);
+      doc.setTextColor(240, 240, 240);
+      doc.text("KEVEXPLORE", 105, 150, { align: "center", angle: 45 });
+
+      // Add modern header with branding color
+      doc.setFillColor(34, 85, 136); // Modern blue
+      doc.rect(0, 0, 210, 30, 'F');
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(18);
+      doc.text("KEVEXPLORE INVOICE", 105, 20, { align: "center" });
+
+      // Add company details
+      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(12);
+      doc.text("Nairobi, Kenya", 10, 40);
+      doc.text("Phone: 0708328905", 10, 45);
+
+      // Add client and project information
+      doc.setFont("helvetica", "normal");
+      doc.text(`Client Name: ${clientName}`, 10, 60);
+      doc.text(`Project Name: ${projectName}`, 10, 65);
+
+      // Add modern table header
+      let y = 80;
+      doc.setFontSize(12);
+      doc.setFillColor(240, 240, 240); // Light gray
+      doc.rect(10, y - 10, 190, 10, 'F');
+      doc.setFont("helvetica", "bold");
+      doc.text("Task/Service", 15, y);
+      doc.text("Cost (KES)", 180, y, { align: "right" });
+      y += 10;
+
+      // Draw table content
+      let grandTotal = 0;
+      doc.setFont("helvetica", "normal");
+      tasks.forEach((task) => {
+        doc.text(task.description, 15, y);
+        doc.text(task.cost.toFixed(2), 180, y, { align: "right" });
+        y += 10;
+        grandTotal += task.cost;
+      });
+
+      // Add grand total
+      doc.setFont("helvetica", "bold");
+      doc.setFillColor(240, 240, 240);
+      doc.rect(10, y, 190, 10, 'F');
+      doc.text("Grand Total:", 15, y + 7);
+      doc.text(`KES ${grandTotal.toFixed(2)}`, 180, y + 7, { align: "right" });
+
+      // Add circular digital stamp
+      doc.setDrawColor(128, 0, 0); // Maroon border
+      doc.setLineWidth(1.5);
+      doc.circle(105, y + 40, 20, 'S'); // Outer circle
+      doc.setFontSize(12);
+      doc.setTextColor(128, 0, 0);
+      doc.text("KEVEXPLORE", 105, y + 37, { align: "center" });
+      doc.text("APPROVED", 105, y + 44, { align: "center" });
+
+      // Save the PDF
+      doc.save(`Invoice_${clientName}_${projectName}.pdf`);
+    }
+  </script>
+</body>
+</html>
