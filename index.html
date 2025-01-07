@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Modern Invoice Generator</title>
+  <title>Josi Printers Invoice Generator</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
   <style>
-    body {
+    body {  
       font-family: Arial, sans-serif;
       margin: 20px;
     }
@@ -68,20 +68,22 @@
   <div class="container">
     <h1>Modern Invoice Generator</h1>
     <div class="company-info">
-      <p><strong>KEVEXPLORE</strong></p>
-      <p>Nairobi, Kenya</p>
-      <p>Phone: 0708328905</p>
+      <p><strong>Josi Printers</strong></p>
+      <p>Kiria-ini, Muranga</p>
+      <p>Phone: 0701050955 </p>
+      <button onclick="window.location.href='receipt.html'" class="btn">Go to Receipt Generator</button>
+
     </div>
     <form id="invoiceForm">
       <label for="clientName">Client Name:</label>
       <input type="text" id="clientName" required>
 
       <label for="projectName">Project Name:</label>
-      <input type="text" id="projectName" placeholder="e.g., Website Development" required>
+      <input type="text" id="projectName" placeholder="e.g., Printing and design" required>
 
       <h2>Pricing Breakdown</h2>
       <label for="taskDescription">Task/Service Description:</label>
-      <input type="text" id="taskDescription" placeholder="e.g., Frontend Development" required>
+      <input type="text" id="taskDescription" placeholder="e.g., Printing" required>
 
       <label for="taskCost">Cost (KES):</label>
       <input type="number" id="taskCost" min="1" step="0.01" required>
@@ -165,7 +167,7 @@
       // Add watermark
       doc.setFontSize(50);
       doc.setTextColor(240, 240, 240);
-      doc.text("KEVEXPLORE", 105, 150, { align: "center", angle: 45 });
+      doc.text("JOSI PRINTERS", 105, 150, { align: "center", angle: 45 });
 
       // Add modern header with branding color
       doc.setFillColor(34, 85, 136); // Modern blue
@@ -173,13 +175,13 @@
       doc.setFont("helvetica", "bold");
       doc.setTextColor(255, 255, 255);
       doc.setFontSize(18);
-      doc.text("KEVEXPLORE INVOICE", 105, 20, { align: "center" });
+      doc.text("JOSI PRINTERS INVOICE", 105, 20, { align: "center" });
 
       // Add company details
       doc.setTextColor(0, 0, 0);
       doc.setFontSize(12);
-      doc.text("Nairobi, Kenya", 10, 40);
-      doc.text("Phone: 0708328905", 10, 45);
+      doc.text("KIRIA-INI, MURANGA", 10, 40);
+      doc.text("Phone: 0701050955", 10, 45);
 
       // Add client and project information
       doc.setFont("helvetica", "normal");
@@ -219,7 +221,7 @@
       doc.circle(105, y + 40, 20, 'S'); // Outer circle
       doc.setFontSize(12);
       doc.setTextColor(128, 0, 0);
-      doc.text("KEVEXPLORE", 105, y + 37, { align: "center" });
+      doc.text("JOSI PRINTERS", 105, y + 37, { align: "center" });
       doc.text("APPROVED", 105, y + 44, { align: "center" });
 
       // Save the PDF

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Receipt Generator</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+  <style>
+    /* General Styles */
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f9fafb;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 2rem;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: #1d4ed8;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #374151;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 0.75rem;
+      margin-bottom: 1rem;
+      border: 1px solid #d1d5db;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+    }
+
+    button {
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    button:hover {
+      background-color: #1e40af;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1.5rem;
+    }
+
+    th, td {
+      border: 1px solid #e5e7eb;
+      text-align: left;
+      padding: 0.75rem;
+    }
+
+    th {
+      background-color: #f3f4f6;
+      color: #374151;
+    }
+
+    tfoot td {
+      font-weight: bold;
+    }
+
+    .footer-text {
+      font-size: 0.875rem;
+      text-align: center;
+      color: #9ca3af;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Receipt Generator</h1>
+    <!-- Company Details -->
+    <div class="text-center mb-6">
+      <p class="text-lg font-bold">Josi Printers</p>
+      <p class="text-gray-600">Kiria-ini, Muranga</p>
+      <p class="text-gray-600">Phone: 0701050955</p>
+      <button onclick="window.location.href='index.html'" class="btn">Go to invoice Generator</button>
+
+    </div>
+
+    <!-- Receipt Form -->
+    <form id="receiptForm">
+      <label for="clientName">Client Name:</label>
+      <input type="text" id="clientName" placeholder="e.g., John Doe" required>
+
+      <label for="itemDescription">Item/Service Description:</label>
+      <input type="text" id="itemDescription" placeholder="e.g., Printing services" required>
+
+      <label for="quantity">Quantity:</label>
+      <input type="number" id="quantity" min="1" step="1" placeholder="e.g., 2" required>
+
+      <label for="itemCost">Cost per Unit (KES):</label>
+      <input type="number" id="itemCost" min="1" step="0.01" placeholder="e.g., 1500" required>
+
+      <button type="button" onclick="addItem()">Add Item</button>
+    </form>
+
+    <!-- Items Table -->
+    <h2 class="text-center">Items Added</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Item/Service</th>
+          <th>Quantity</th>
+          <th>Cost per Unit (KES)</th>
+          <th>Total (KES)</th>
+        </tr>
+      </thead>
+      <tbody id="itemsTable"></tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3" class="text-right">Grand Total:</td>
+          <td id="grandTotal">0.00</td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <button onclick="generateReceipt()">Generate Receipt</button>
+    <p class="footer-text">&copy; 2025 Josi Printers. All Rights Reserved.</p>
+  </div>
+
+  <script>
+    let items = [];
+    let receiptNumber = Math.floor(Math.random() * 100000) + 1;
+
+    function addItem() {
+      const itemDescription = document.getElementById("itemDescription").value;
+      const quantity = parseInt(document.getElementById("quantity").value);
+      const itemCost = parseFloat(document.getElementById("itemCost").value);
+
+      if (!itemDescription || quantity <= 0 || itemCost <= 0) {
+        alert("Please provide valid item details.");
+        return;
+      }
+
+      const total = quantity * itemCost;
+      items.push({ description: itemDescription, quantity, cost: itemCost, total });
+      renderItemsTable();
+      clearItemForm();
+    }
+
+    function renderItemsTable() {
+      const itemsTable = document.getElementById("itemsTable");
+      itemsTable.innerHTML = ""; // Clear previous entries
+      let grandTotal = 0;
+
+      items.forEach((item) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td class="border border-gray-300 px-4 py-2">${item.description}</td>
+          <td class="border border-gray-300 px-4 py-2">${item.quantity}</td>
+          <td class="border border-gray-300 px-4 py-2">${item.cost.toFixed(2)}</td>
+          <td class="border border-gray-300 px-4 py-2">${item.total.toFixed(2)}</td>
+        `;
+        itemsTable.appendChild(row);
+        grandTotal += item.total;
+      });
+
+      document.getElementById("grandTotal").textContent = grandTotal.toFixed(2);
+    }
+
+    function clearItemForm() {
+      document.getElementById("itemDescription").value = "";
+      document.getElementById("quantity").value = "";
+      document.getElementById("itemCost").value = "";
+    }
+
+    async function generateReceipt() {
+      const clientName = document.getElementById("clientName").value;
+
+      if (!clientName || items.length === 0) {
+        alert("Please fill out all fields and add at least one item.");
+        return;
+      }
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      // Add Watermark
+      doc.setFontSize(50);
+      doc.setTextColor(240, 240, 240);
+      doc.text("JOSI PRINTERS", 105, 150, { align: "center", angle: 45 });
+
+      // Add modern header with branding color
+      doc.setFillColor(34, 85, 136); // Modern blue
+      doc.rect(0, 0, 210, 30, 'F');
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(18);
+      doc.text("JOSI PRINTERS Receipt", 105, 20, { align: "center" });
+      doc.text("KIRIA-INI, MURANGA", 10, 40);
+      doc.text("Phone: 0701050955", 10, 45);
+
+   
+
+      // Add Details
+      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(12);
+      doc.text(`Receipt Number: ${receiptNumber}`, 10, 40);
+      doc.text(`Client Name: ${clientName}`, 10, 50);
+
+      // Items Table
+      let y = 60;
+      doc.setFontSize(10);
+      doc.text("Item/Service", 10, y);
+      doc.text("Quantity", 80, y);
+      doc.text("Cost per Unit (KES)", 120, y);
+      doc.text("Total (KES)", 180, y);
+      y += 10;
+
+      let grandTotal = 0;
+      items.forEach((item) => {
+        doc.text(item.description, 10, y);
+        doc.text(item.quantity.toString(), 80, y);
+        doc.text(item.cost.toFixed(2), 120, y);
+        doc.text(item.total.toFixed(2), 180, y);
+        y += 10;
+        grandTotal += item.total;
+      });
+
+      // Grand Total
+      doc.setFont("helvetica", "bold");
+      doc.text("Grand Total:", 120, y);
+      doc.text(`KES ${grandTotal.toFixed(2)}`, 180, y);
+
+      // Add Digital Stamp
+      doc.setDrawColor(128, 0, 0);
+      doc.setLineWidth(1.5);
+      doc.circle(105, y + 20, 20, "S");
+      doc.setFontSize(12);
+      doc.setTextColor(128, 0, 0);
+      doc.text("JOSI PRINTERS", 105, y + 15, { align: "center" });
+      doc.text("APPROVED", 105, y + 25, { align: "center" });
+
+      // Save PDF
+      doc.save(`Receipt_${clientName}_${receiptNumber}.pdf`);
+    }
+  </script>
+</body>
+</html>
