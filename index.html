@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Josi Printers Invoice Generator</title>
+  <title>NeuraFrame Invoice Generator</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
   <style>
     body {  
@@ -68,9 +68,9 @@
   <div class="container">
     <h1>Modern Invoice Generator</h1>
     <div class="company-info">
-      <p><strong>Josi Printers</strong></p>
+      <p><strong>Kev</strong></p>
       <p>Kiria-ini, Muranga</p>
-      <p>Phone: 0701050955 </p>
+      <p>Phone: 0708328905 </p>
       <button onclick="window.location.href='receipt.html'" class="btn">Go to Receipt Generator</button>
 
     </div>
@@ -167,7 +167,7 @@
       // Add watermark
       doc.setFontSize(50);
       doc.setTextColor(240, 240, 240);
-      doc.text("JOSI PRINTERS", 105, 150, { align: "center", angle: 45 });
+      doc.text("NeuraFrame", 105, 150, { align: "center", angle: 45 });
 
       // Add modern header with branding color
       doc.setFillColor(34, 85, 136); // Modern blue
@@ -175,7 +175,7 @@
       doc.setFont("helvetica", "bold");
       doc.setTextColor(255, 255, 255);
       doc.setFontSize(18);
-      doc.text("JOSI PRINTERS INVOICE", 105, 20, { align: "center" });
+      doc.text("NEURAFRAME INVOICE", 105, 20, { align: "center" });
 
       // Add company details
       doc.setTextColor(0, 0, 0);
@@ -221,7 +221,7 @@
       doc.circle(105, y + 40, 20, 'S'); // Outer circle
       doc.setFontSize(12);
       doc.setTextColor(128, 0, 0);
-      doc.text("JOSI PRINTERS", 105, y + 37, { align: "center" });
+      doc.text("NeuraFrame", 105, y + 37, { align: "center" });
       doc.text("APPROVED", 105, y + 44, { align: "center" });
 
       // Save the PDF

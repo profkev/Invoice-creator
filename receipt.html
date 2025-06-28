@@ -103,9 +103,9 @@
     <h1>Receipt Generator</h1>
     <!-- Company Details -->
     <div class="text-center mb-6">
-      <p class="text-lg font-bold">Josi Printers</p>
+      <p class="text-lg font-bold">NeuraFrame</p>
       <p class="text-gray-600">Kiria-ini, Muranga</p>
-      <p class="text-gray-600">Phone: 0701050955</p>
+      <p class="text-gray-600">Phone: 0708328905</p>
       <button onclick="window.location.href='index.html'" class="btn">Go to invoice Generator</button>
 
     </div>
@@ -148,7 +148,7 @@
     </table>
 
     <button onclick="generateReceipt()">Generate Receipt</button>
-    <p class="footer-text">&copy; 2025 Josi Printers. All Rights Reserved.</p>
+    <p class="footer-text">&copy; 2025 NeuraFrame. All Rights Reserved.</p>
   </div>
 
   <script>
@@ -211,7 +211,7 @@
       // Add Watermark
       doc.setFontSize(50);
       doc.setTextColor(240, 240, 240);
-      doc.text("JOSI PRINTERS", 105, 150, { align: "center", angle: 45 });
+      doc.text("NEURAFRAME", 105, 150, { align: "center", angle: 45 });
 
       // Add modern header with branding color
       doc.setFillColor(34, 85, 136); // Modern blue
@@ -219,9 +219,9 @@
       doc.setFont("helvetica", "bold");
       doc.setTextColor(255, 255, 255);
       doc.setFontSize(18);
-      doc.text("JOSI PRINTERS Receipt", 105, 20, { align: "center" });
+      doc.text("NEURAFRAME Receipt", 105, 20, { align: "center" });
       doc.text("KIRIA-INI, MURANGA", 10, 40);
-      doc.text("Phone: 0701050955", 10, 45);
+      doc.text("Phone: 0708328905", 10, 45);
 
    
 
@@ -261,7 +261,7 @@
       doc.circle(105, y + 20, 20, "S");
       doc.setFontSize(12);
       doc.setTextColor(128, 0, 0);
-      doc.text("JOSI PRINTERS", 105, y + 15, { align: "center" });
+      doc.text("NEURAFRAME", 105, y + 15, { align: "center" });
       doc.text("APPROVED", 105, y + 25, { align: "center" });
 
       // Save PDF
