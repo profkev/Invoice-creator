@@ -217,8 +217,9 @@
       doc.text("Grand Total:", 15, y + 7);
       doc.text(`KES ${grandTotal.toFixed(2)}`, 180, y + 7, { align: "right" });
 
+
       // Draw double circular stamp
-doc.setDrawColor(128, 0, 0); // Maroon color
+doc.setDrawColor(128, 0, 0); // Maroon
 doc.setLineWidth(1.5);
 
 // Outer circle
@@ -227,29 +228,45 @@ doc.circle(105, y + 40, 25, 'S');
 // Inner circle
 doc.circle(105, y + 40, 20, 'S');
 
-// Company name text around the ring
-doc.setFontSize(10);
-doc.setTextColor(128, 0, 0);
-doc.text("NeuraFrame Ltd.", 105, y + 20, { align: "center" });
-
-// Inner approval text
+// Inner "APPROVED" text
 doc.setFontSize(12);
+doc.setTextColor(128, 0, 0);
 doc.text("APPROVED", 105, y + 40, { align: "center" });
 
-// Add realtime date below
+// Date
 const today = new Date().toLocaleDateString();
 doc.setFontSize(9);
 doc.text(today, 105, y + 48, { align: "center" });
 
-// Add "ink splatter" effect
-doc.setFillColor(128, 0, 0);
-for (let i = 0; i < 15; i++) {
-    const offsetX = Math.random() * 10 - 5; // random offset -5 to +5
-    const offsetY = Math.random() * 10 - 5;
-    const radius = Math.random() * 1.5 + 0.5; // random small dot
-    doc.circle(105 + offsetX, y + 40 + offsetY, radius, 'F'); // filled circle
+// Text for circular path
+const circleText = "NeuraFrame Ltd. ★ kmaina102@gmail.com ★ ";
+const centerX = 105;
+const centerY = y + 40;
+const radius = 22.5; // Between the circles
+const startAngle = -Math.PI / 2; // Start from top
+
+// Set font for circular text
+doc.setFontSize(7);
+doc.setTextColor(128, 0, 0);
+
+// Draw each character along the circle
+const charSpacing = (2 * Math.PI * radius) / circleText.length;
+
+for (let i = 0; i < circleText.length; i++) {
+  const charAngle = startAngle + i * charSpacing / radius;
+  const x = centerX + radius * Math.cos(charAngle);
+  const yChar = centerY + radius * Math.sin(charAngle);
+
+  doc.saveGraphicsState();
+  doc.text(circleText[i], x, yChar, {
+    angle: (charAngle * 180) / Math.PI + 90,
+    align: "center"
+  });
+  doc.restoreGraphicsState();
 }
 
+
+     
 
       // Save the PDF
       doc.save(`Invoice_${clientName}_${projectName}.pdf`);
