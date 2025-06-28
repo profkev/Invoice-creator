@@ -245,7 +245,7 @@ doc.circle(stampX + 25, stampY + 25, 1, 'S'); // Small central node
 doc.setFontSize(7);
 doc.setTextColor(106, 90, 205); // Slate blue text
 doc.setFont("helvetica", "bold");
-doc.text("NeuraFrame Ltd.", stampX + stampWidth / 2, stampY + 12, { align: "center" });
+doc.text("NeuraKFrame Ltd.", stampX + stampWidth / 2, stampY + 12, { align: "center" });
 
 doc.setFontSize(6);
 doc.setFont("helvetica", "normal");
@@ -268,6 +268,9 @@ doc.setFontSize(9);
 doc.setTextColor(0, 0, 128); // Deep navy for signature
 doc.setFont("courier", "italic");
 doc.text("~ K. Maina ~", stampX + stampWidth / 2, stampY + 47, { align: "center" });
+
+// --- Save PDF ---
+doc.save(`Invoice_${clientName}_${projectName}.pdf`);
   }
   </script>
 </body>
