@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NeuraFrame Invoice Generator</title>
+  <title>NeuraFrame QUOTATION Generator</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
   <style>
     body {  
@@ -66,7 +66,7 @@
 </head>
 <body>
   <div class="container">
-    <h1>Modern Invoice Generator</h1>
+    <h1>ModerN QUOTATION Generator</h1>
     <div class="company-info">
       <p><strong>NeuraFrame</strong></p>
       <p>Kiria-ini, Muranga</p>
@@ -175,7 +175,7 @@
       doc.setFont("helvetica", "bold");
       doc.setTextColor(255, 255, 255);
       doc.setFontSize(18);
-      doc.text("NEURAFRAME INVOICE", 105, 20, { align: "center" });
+      doc.text("NEURAFRAME QUOTATION", 105, 20, { align: "center" });
 
       // Add company details
       doc.setTextColor(0, 0, 0);
@@ -216,14 +216,39 @@
       doc.text("Grand Total:", 15, y + 7);
       doc.text(`KES ${grandTotal.toFixed(2)}`, 180, y + 7, { align: "right" });
 
-      // Add circular digital stamp
-      doc.setDrawColor(128, 0, 0); // Maroon border
-      doc.setLineWidth(1.5);
-      doc.circle(105, y + 40, 20, 'S'); // Outer circle
-      doc.setFontSize(12);
-      doc.setTextColor(128, 0, 0);
-      doc.text("NeuraFrame", 105, y + 37, { align: "center" });
-      doc.text("APPROVED", 105, y + 44, { align: "center" });
+      // Draw double circular stamp
+doc.setDrawColor(128, 0, 0); // Maroon color
+doc.setLineWidth(1.5);
+
+// Outer circle
+doc.circle(105, y + 40, 25, 'S');
+
+// Inner circle
+doc.circle(105, y + 40, 20, 'S');
+
+// Company name text around the ring
+doc.setFontSize(10);
+doc.setTextColor(128, 0, 0);
+doc.text("NeuraFrame Ltd.", 105, y + 20, { align: "center" });
+
+// Inner approval text
+doc.setFontSize(12);
+doc.text("APPROVED", 105, y + 40, { align: "center" });
+
+// Add realtime date below
+const today = new Date().toLocaleDateString();
+doc.setFontSize(9);
+doc.text(today, 105, y + 48, { align: "center" });
+
+// Add "ink splatter" effect
+doc.setFillColor(128, 0, 0);
+for (let i = 0; i < 15; i++) {
+    const offsetX = Math.random() * 10 - 5; // random offset -5 to +5
+    const offsetY = Math.random() * 10 - 5;
+    const radius = Math.random() * 1.5 + 0.5; // random small dot
+    doc.circle(105 + offsetX, y + 40 + offsetY, radius, 'F'); // filled circle
+}
+
 
       // Save the PDF
       doc.save(`Invoice_${clientName}_${projectName}.pdf`);
