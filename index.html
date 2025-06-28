@@ -219,51 +219,56 @@ doc.text(`KES ${grandTotal.toFixed(2)}`, 180, y + 7, { align: "right" });
 // --- Space before stamp ---
 y += 30;
 
-doc.setDrawColor(139, 0, 0); // Deep maroon for border
+doc.setDrawColor(139, 0, 0); // Deep maroon for outer border
 doc.setLineWidth(2);
 
-// Elliptical stamp
-const stampX = 80; // Center X
-const stampY = y + 25; // Center Y
-const radiusX = 30; // Horizontal radius
-const radiusY = 20; // Vertical radius
+// Rounded rectangle stamp (outer)
+const stampX = 80; // Top-left X
+const stampY = y; // Top-left Y
+const stampWidth = 50;
+const stampHeight = 50;
+const cornerRadius = 8; // Rounded corners
 
-// Draw ellipse
-doc.ellipse(stampX, stampY, radiusX, radiusY, 'S');
+doc.roundedRect(stampX, stampY, stampWidth, stampHeight, cornerRadius, cornerRadius, 'S');
+
+// Inner rounded rectangle (double lining)
+doc.setDrawColor(178, 34, 34); // Firebrick for inner border
+doc.setLineWidth(1);
+doc.roundedRect(stampX + 2, stampY + 2, stampWidth - 4, stampHeight - 4, cornerRadius - 2, cornerRadius - 2, 'S');
 
 // Neural network-inspired inner lines (subtle pattern)
 doc.setDrawColor(150, 150, 150); // Light gray for neural effect
 doc.setLineWidth(0.5);
-doc.line(stampX - 10, stampY - 10, stampX + 10, stampY + 10); // Diagonal neural line
-doc.line(stampX - 10, stampY + 10, stampX + 10, stampY - 10); // Crossed neural line
+doc.line(stampX + 15, stampY + 15, stampX + 35, stampY + 35); // Diagonal neural line
+doc.line(stampX + 15, stampY + 35, stampX + 35, stampY + 15); // Crossed neural line
 
 // Stamp content
 doc.setFontSize(7);
 doc.setTextColor(139, 0, 0); // Deep maroon text
 doc.setFont("helvetica", "bold");
-doc.text("NeuraKFrame Ltd.", stampX, stampY - 10, { align: "center" });
+doc.text("NeuraKFrame Ltd.", stampX + stampWidth / 2, stampY + 12, { align: "center" });
 
 doc.setFontSize(6);
 doc.setFont("helvetica", "normal");
-doc.text("kmaina102@gmail.com", stampX, stampY - 4, { align: "center" });
-doc.text("k • Maina", stampX, stampY + 2, { align: "center" });
+doc.text("kmaina102@gmail.com", stampX + stampWidth / 2, stampY + 18, { align: "center" });
+doc.text("APPROBATUM • SIGNATUM", stampX + stampWidth / 2, stampY + 24, { align: "center" });
 
 doc.setFontSize(10);
 doc.setTextColor(178, 34, 34); // Firebrick for emphasis
 doc.setFont("helvetica", "bold");
-doc.text("APPROVED", stampX, stampY + 10, { align: "center" });
+doc.text("APPROVED", stampX + stampWidth / 2, stampY + 34, { align: "center" });
 
 const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 doc.setFontSize(7);
 doc.setTextColor(139, 0, 0);
 doc.setFont("helvetica", "normal");
-doc.text(today, stampX, stampY + 16, { align: "center" });
+doc.text(today, stampX + stampWidth / 2, stampY + 40, { align: "center" });
 
 // Simulated signature
 doc.setFontSize(9);
 doc.setTextColor(0, 0, 139); // Dark blue ink for signature
 doc.setFont("courier", "italic");
-doc.text("~ K. Maina ~", stampX, stampY + 22, { align: "center" });
+doc.text("~ K. Maina ~", stampX + stampWidth / 2, stampY + 47, { align: "center" });
 
 // --- Save PDF ---
 doc.save(`Invoice_${clientName}_${projectName}.pdf`);
