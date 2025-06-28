@@ -178,17 +178,18 @@
       doc.text("NEURAFRAME QUOTATION", 105, 20, { align: "center" });
 
       // Add company details
-      doc.setTextColor(0, 0, 0);
-      doc.setFontSize(12);
-      doc.text("Phone: 0708328905", 10, 45);
-      doc.text("Email: kmaina102@gmail.com", 10, 50);
-      doc.text("Served By: Kelvin Maina", 10, 55);
+// Add company details
+doc.setTextColor(0, 0, 0);
+doc.setFontSize(12);
+doc.text("Phone: 0708328905", 10, 45);
+doc.text("Email: kmaina102@gmail.com", 10, 52);  // moved down from 50 to 52
+doc.text("Served By: Kelvin Maina", 10, 59);    // moved down from 55 to 59
 
+// Add client and project information
+doc.setFont("helvetica", "normal");
+doc.text(`Client Name: ${clientName}`, 10, 66); // adjust down
+doc.text(`Project Name: ${projectName}`, 10, 71); // adjust down
 
-      // Add client and project information
-      doc.setFont("helvetica", "normal");
-      doc.text(`Client Name: ${clientName}`, 10, 60);
-      doc.text(`Project Name: ${projectName}`, 10, 65);
 
       // Add modern table header
       let y = 80;
@@ -218,57 +219,40 @@
       doc.text(`KES ${grandTotal.toFixed(2)}`, 180, y + 7, { align: "right" });
 
 
-      // Draw double circular stamp
+     // Set colors
 doc.setDrawColor(128, 0, 0); // Maroon
 doc.setLineWidth(1.5);
 
-// Outer circle
-doc.circle(105, y + 40, 25, 'S');
+// Draw square stamp
+const stampX = 80;
+const stampY = y + 20;
+const stampWidth = 50;
+const stampHeight = 50;
 
-// Inner circle
-doc.circle(105, y + 40, 20, 'S');
+doc.rect(stampX, stampY, stampWidth, stampHeight, 'S');
 
-// Inner "APPROVED" text
-doc.setFontSize(12);
+// Company name and email inside
+doc.setFontSize(8);
 doc.setTextColor(128, 0, 0);
-doc.text("APPROVED", 105, y + 40, { align: "center" });
+doc.text("NeuraFrame Ltd.", stampX + stampWidth / 2, stampY + 10, { align: "center" });
+doc.text("kmaina102@gmail.com", stampX + stampWidth / 2, stampY + 18, { align: "center" });
+
+// APPROVED text
+doc.setFontSize(12);
+doc.text("APPROVED", stampX + stampWidth / 2, stampY + 30, { align: "center" });
 
 // Date
 const today = new Date().toLocaleDateString();
 doc.setFontSize(9);
-doc.text(today, 105, y + 48, { align: "center" });
+doc.text(today, stampX + stampWidth / 2, stampY + 38, { align: "center" });
 
-// Text for circular path
-const circleText = "NeuraFrame Ltd. ★ kmaina102@gmail.com ★ ";
-const centerX = 105;
-const centerY = y + 40;
-const radius = 22.5; // Between the circles
-const startAngle = -Math.PI / 2; // Start from top
-
-// Set font for circular text
-doc.setFontSize(7);
-doc.setTextColor(128, 0, 0);
-
-// Draw each character along the circle
-const charSpacing = (2 * Math.PI * radius) / circleText.length;
-
-for (let i = 0; i < circleText.length; i++) {
-  const charAngle = startAngle + i * charSpacing / radius;
-  const x = centerX + radius * Math.cos(charAngle);
-  const yChar = centerY + radius * Math.sin(charAngle);
-
-  doc.saveGraphicsState();
-  doc.text(circleText[i], x, yChar, {
-    angle: (charAngle * 180) / Math.PI + 90,
-    align: "center"
-  });
-  doc.restoreGraphicsState();
-}
+// Simulated signature (stylized text or line)
+doc.setFontSize(11);
+doc.setTextColor(66, 33, 0); // Dark brownish ink color
+doc.text("~ K. Maina ~", stampX + stampWidth / 2, stampY + 46, { align: "center" });
 
 
-     
-
-      // Save the PDF
+          // Save the PDF
       doc.save(`Invoice_${clientName}_${projectName}.pdf`);
     }
   </script>
