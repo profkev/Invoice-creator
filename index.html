@@ -151,127 +151,135 @@
       document.getElementById('taskDescription').value = '';
       document.getElementById('taskCost').value = '';
     }
+async function downloadInvoice() {
+  const clientName = document.getElementById('clientName').value;
+  const projectName = document.getElementById('projectName').value;
 
-    async function downloadInvoice() {
-      const clientName = document.getElementById('clientName').value;
-      const projectName = document.getElementById('projectName').value;
-
-      if (!clientName || !projectName || tasks.length === 0) {
-        alert('Please fill out the client name, project name, and add at least one task.');
-        return;
-      }
-
-      const { jsPDF } = window.jspdf;
-const doc = new jsPDF();
-
-// --- Watermark ---
-doc.setFontSize(50);
-doc.setTextColor(240, 240, 240);
-doc.text("NeuraFrame", 105, 150, { align: "center", angle: 45 });
-
-// --- Header ---
-doc.setFillColor(34, 85, 136); // Modern blue
-doc.rect(0, 0, 210, 30, 'F');
-doc.setFont("helvetica", "bold");
-doc.setTextColor(255, 255, 255);
-doc.setFontSize(18);
-doc.text("NEURAFRAME QUOTATION", 105, 20, { align: "center" });
-
-// --- Company details ---
-doc.setTextColor(0, 0, 0);
-doc.setFont("helvetica", "normal");
-doc.setFontSize(12);
-doc.text("Phone: 0708328905", 10, 45);
-doc.text("Email: kmaina102@gmail.com", 10, 53);  // extra space
-doc.text("Served By: Kelvin Maina", 10, 61);     // extra space
-
-// --- Client and project info ---
-doc.text(`Client Name: ${clientName}`, 10, 69);
-doc.text(`Project Name: ${projectName}`, 10, 77);
-
-// --- Table header ---
-let y = 90; // Start lower to avoid overlapping
-doc.setFontSize(12);
-doc.setFillColor(240, 240, 240);
-doc.rect(10, y - 8, 190, 10, 'F');
-doc.setFont("helvetica", "bold");
-doc.text("Task/Service", 15, y);
-doc.text("Cost (KES)", 180, y, { align: "right" });
-y += 10;
-
-// --- Table content ---
-let grandTotal = 0;
-doc.setFont("helvetica", "normal");
-tasks.forEach((task) => {
-  doc.text(task.description, 15, y);
-  doc.text(task.cost.toFixed(2), 180, y, { align: "right" });
-  y += 10;
-  grandTotal += task.cost;
-});
-
-// --- Grand total row ---
-doc.setFont("helvetica", "bold");
-doc.setFillColor(240, 240, 240);
-doc.rect(10, y, 190, 10, 'F');
-doc.text("Grand Total:", 15, y + 7);
-doc.text(`KES ${grandTotal.toFixed(2)}`, 180, y + 7, { align: "right" });
-
-// --- Space before stamp ---
-y += 30;
-
-doc.setDrawColor(106, 90, 205); // Slate blue for outer border
-doc.setLineWidth(1); // Normal line width
-
-// Rounded rectangle stamp (outer)
-const stampX = 80; // Top-left X
-const stampY = y; // Top-left Y
-const stampWidth = 50;
-const stampHeight = 50;
-const cornerRadius = 8; // Rounded corners
-
-doc.roundedRect(stampX, stampY, stampWidth, stampHeight, cornerRadius, cornerRadius, 'S');
-
-// Inner rounded rectangle (double lining)
-doc.setDrawColor(147, 112, 219); // Electric purple for inner border
-doc.setLineWidth(1); // Normal line width
-doc.roundedRect(stampX + 2, stampY + 2, stampWidth - 4, stampHeight - 4, cornerRadius - 2, cornerRadius - 2, 'S');
-
-// Neural network-inspired central node
-doc.setDrawColor(218, 165, 32); // Soft gold for neural effect
-doc.setLineWidth(0.5);
-doc.circle(stampX + 25, stampY + 25, 1, 'S'); // Small central node
-
-// Stamp content
-doc.setFontSize(7);
-doc.setTextColor(106, 90, 205); // Slate blue text
-doc.setFont("helvetica", "bold");
-doc.text("NeuraKFrame Ltd.", stampX + stampWidth / 2, stampY + 12, { align: "center" });
-
-doc.setFontSize(6);
-doc.setFont("helvetica", "normal");
-doc.text("kmaina102@gmail.com", stampX + stampWidth / 2, stampY + 18, { align: "center" });
-doc.text("APPROBATUM • SIGNATUM", stampX + stampWidth / 2, stampY + 24, { align: "center" });
-
-doc.setFontSize(10);
-doc.setTextColor(147, 112, 219); // Electric purple for emphasis
-doc.setFont("helvetica", "bold");
-doc.text("APPROVED", stampX + stampWidth / 2, stampY + 34, { align: "center" });
-
-const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-doc.setFontSize(7);
-doc.setTextColor(106, 90, 205); // Slate blue
-doc.setFont("helvetica", "normal");
-doc.text(today, stampX + stampWidth / 2, stampY + 40, { align: "center" });
-
-// Simulated signature
-doc.setFontSize(9);
-doc.setTextColor(0, 0, 128); // Deep navy for signature
-doc.setFont("courier", "italic");
-doc.text("~ K. Maina ~", stampX + stampWidth / 2, stampY + 47, { align: "center" });
-
-// --- Save PDF ---
-doc.save(`Invoice_${clientName}_${projectName}.pdf`);
+  if (!clientName || !projectName || tasks.length === 0) {
+    alert('Please fill out the client name, project name, and add at least one task.');
+    return;
   }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  // --- Watermark ---
+  doc.setFontSize(50);
+  doc.setTextColor(240, 240, 240);
+  doc.text("NeuraFrame", 105, 150, { align: "center", angle: 45 });
+
+  // --- Header ---
+  doc.setFillColor(34, 85, 136); // Modern blue
+  doc.rect(0, 0, 210, 30, 'F');
+  doc.setFont("helvetica", "bold");
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(18);
+  doc.text("NEURAFRAME QUOTATION", 105, 20, { align: "center" });
+
+  // --- Company details ---
+  doc.setTextColor(0, 0, 0);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(12);
+  doc.text("Phone: 0708328905", 10, 45);
+  doc.text("Email: kmaina102@gmail.com", 10, 53);
+  doc.text("Served By: Kelvin Maina", 10, 61);
+
+  // --- Client and project info ---
+  doc.text(`Client Name: ${clientName}`, 10, 69);
+  doc.text(`Project Name: ${projectName}`, 10, 77);
+
+  // --- Table header ---
+  let y = 90;
+  doc.setFontSize(12);
+  doc.setFillColor(240, 240, 240);
+  doc.rect(10, y - 8, 190, 10, 'F');
+  doc.setFont("helvetica", "bold");
+  doc.text("Task/Service", 15, y);
+  doc.text("Cost (KES)", 180, y, { align: "right" });
+  y += 10;
+
+  // --- Table content ---
+  let grandTotal = 0;
+  doc.setFont("helvetica", "normal");
+
+  tasks.forEach((task) => {
+    if (y > 270) { // Check for page overflow
+      doc.addPage();
+      y = 20; // Reset y on new page
+    }
+    doc.text(task.description, 15, y);
+    doc.text(task.cost.toFixed(2), 180, y, { align: "right" });
+    y += 10;
+    grandTotal += task.cost;
+  });
+
+  // --- Grand total row ---
+  if (y > 270) {
+    doc.addPage();
+    y = 20;
+  }
+  doc.setFont("helvetica", "bold");
+  doc.setFillColor(240, 240, 240);
+  doc.rect(10, y, 190, 10, 'F');
+  doc.text("Grand Total:", 15, y + 7);
+  doc.text(`KES ${grandTotal.toFixed(2)}`, 180, y + 7, { align: "right" });
+
+  // --- Space before stamp ---
+  y += 30;
+
+  // --- Rectangular stamp with rounded corners ---
+  doc.setDrawColor(106, 90, 205); // Slate blue
+  doc.setLineWidth(1);
+
+  const stampX = 80;
+  const stampY = y;
+  const stampWidth = 50;
+  const stampHeight = 50;
+  const cornerRadius = 8;
+
+  doc.roundedRect(stampX, stampY, stampWidth, stampHeight, cornerRadius, cornerRadius, 'S');
+
+  // Inner rounded rectangle
+  doc.setDrawColor(147, 112, 219);
+  doc.roundedRect(stampX + 2, stampY + 2, stampWidth - 4, stampHeight - 4, cornerRadius - 2, cornerRadius - 2, 'S');
+
+  // Central node
+  doc.setDrawColor(218, 165, 32);
+  doc.setLineWidth(0.5);
+  doc.circle(stampX + stampWidth / 2, stampY + stampHeight / 2, 1, 'S');
+
+  // Stamp text content
+  doc.setFontSize(7);
+  doc.setTextColor(106, 90, 205);
+  doc.setFont("helvetica", "bold");
+  doc.text("NeuraFrame Ltd.", stampX + stampWidth / 2, stampY + 12, { align: "center" });
+
+  doc.setFontSize(6);
+  doc.setFont("helvetica", "normal");
+  doc.text("kmaina102@gmail.com", stampX + stampWidth / 2, stampY + 18, { align: "center" });
+  doc.text("APPROBATUM • SIGNATUM", stampX + stampWidth / 2, stampY + 24, { align: "center" });
+
+  doc.setFontSize(10);
+  doc.setTextColor(147, 112, 219);
+  doc.setFont("helvetica", "bold");
+  doc.text("APPROVED", stampX + stampWidth / 2, stampY + 34, { align: "center" });
+
+  const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+  doc.setFontSize(7);
+  doc.setTextColor(106, 90, 205);
+  doc.setFont("helvetica", "normal");
+  doc.text(today, stampX + stampWidth / 2, stampY + 40, { align: "center" });
+
+  // Simulated signature
+  doc.setFontSize(9);
+  doc.setTextColor(0, 0, 128);
+  doc.setFont("courier", "italic");
+  doc.text("~ K. Maina ~", stampX + stampWidth / 2, stampY + 47, { align: "center" });
+
+  // --- Save PDF ---
+  doc.save(`Invoice_${clientName}_${projectName}.pdf`);
+}
+
   </script>
 </body>
 </html>
